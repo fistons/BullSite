@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>{site_name}</title>
+  <meta charset="UTF-8">
+  <style>
+    video#bgvid {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -100;
+    }
+  </style>
+</head>
+<body>
+<video autoplay loop id="bgvid">
+  <source src="{video_name}" type="{video_mime}">
+</video>
+</body>
+</html>
