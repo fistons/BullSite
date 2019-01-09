@@ -23,7 +23,7 @@ def generate_index(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Create a bullshit website based on a video')
     parser.add_argument('--video_url', type=str, help='Url of the video on Youtube or elsewhere',
                         required=True)
     parser.add_argument('--name', type=str, help='Name of the bullsite', required=True)
