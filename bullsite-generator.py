@@ -6,23 +6,28 @@ import youtube_dl
 from jinja2 import Environment, PackageLoader
 
 
-def download_video(args):
-    ydl = youtube_dl.YoutubeDL({'outtmpl': args.name})
-    with ydl:
-        print(ydl.download([args.video_url]))
+class BullSite:
+    
+    def __init__(self, args):
+        self.args = args
+    
+    def download_video(self):
+        ydl = youtube_dl.YoutubeDL({'outtmpl': self.args.name})
+        with ydl:
+            print(ydl.download([self.args.video_url]))
 
+    def generate_nginx(self):
+        env = Environment(loader=PackageLoader('bullsite-generator', 'templates'))
+        template = env.get_template('nginx.conf')
+        with open('truc', 'w') as f:
+            f.write(template.render(site_path=self.args.site_location, site_url=self.args.site_url))
 
-def generate_nginx(args):
-    env = Environment(loader=PackageLoader('bullsite-generator', 'templates'))
-    template = env.get_template('nginx.conf')
-    print(template.render(site_path=args.site_location, site_url=args.site_url))
-
-
-def generate_index(args):
-    env = Environment(loader=PackageLoader('bullsite-generator', 'templates'))
-    template = env.get_template('index.html')
-    print(
-        template.render(video_name=args.site_location, video_mime="toto", site_name=args.site_url))
+    def generate_index(self):
+        env = Environment(loader=PackageLoader('bullsite-generator', 'templates'))
+        template = env.get_template('index.html')
+        with open('machin', 'w') as f:
+            f.write(template.render(video_name=self.args.site_location, video_mime="toto",
+                                    site_name=self.args.site_url))
 
 
 if __name__ == '__main__':
@@ -36,7 +41,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    bullsite = BullSite(args)
     # download_video(args)
-    generate_nginx(args)
-    generate_index(args)
-
+    bullsite.generate_nginx()
+    bullsite.generate_index()
