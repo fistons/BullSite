@@ -3,6 +3,7 @@
 import argparse
 
 import youtube_dl
+from jinja2 import Environment, PackageLoader
 
 
 def download_video(args):
@@ -12,14 +13,16 @@ def download_video(args):
 
 
 def generate_nginx(args):
-    with open('templates/nginx.conf', 'r') as nginx:
-        for line in nginx:
-            print(line)
-            line = line.format(site_path=args.site_path, site_url=args.site_url)
-            print(line)
+    env = Environment(loader=PackageLoader('bullsite-generator', 'templates'))
+    template = env.get_template('nginx.conf')
+    print(template.render(site_path=args.site_location, site_url=args.site_url))
+
 
 def generate_index(args):
-    pass
+    env = Environment(loader=PackageLoader('bullsite-generator', 'templates'))
+    template = env.get_template('index.html')
+    print(
+        template.render(video_name=args.site_location, video_mime="toto", site_name=args.site_url))
 
 
 if __name__ == '__main__':
@@ -33,6 +36,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-
     # download_video(args)
-    # generate_nginx(args)
+    generate_nginx(args)
+    generate_index(args)
+
