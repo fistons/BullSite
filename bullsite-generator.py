@@ -1,6 +1,7 @@
 #!/bin/env python3
 
 import argparse
+import logging
 import os
 import tempfile
 
@@ -22,11 +23,13 @@ class BullSite:
         self._config = config
         self._tempdir = tempfile.mkdtemp()
         self._env = Environment(loader=PackageLoader('bullsite-generator', 'templates'))
-        print("Using %s as temp directory" % self._tempdir)
+        logging.info("Using %s as temp directory", self._tempdir)
 
     def download_video(self):
-        with youtube_dl.YoutubeDL(self.__youtube_dl_configuration()) as ydl:
-            print(ydl.download([self._config.video_url]))
+        configuration = self.__youtube_dl_configuration()
+        with youtube_dl.YoutubeDL(configuration) as ydl:
+            ydl.download([self._config.video_url])
+            logging.debug("Downloaded video from %s", self._config.video_url)
 
     def generate_nginx(self):
         template = self._env.get_template('nginx.conf')
@@ -34,12 +37,14 @@ class BullSite:
         with open(self._tempdir + '/nginx/nginx.conf', 'w') as f:
             f.write(template.render(site_path=self._config.site_location,
                                     site_url=self._config.site_url))
+        logging.debug("Generated nginx configuration in %s", self._tempdir + '/nginx/nginx.conf')
 
     def generate_index(self):
         template = self._env.get_template('index.html')
         os.makedirs(self._tempdir + '/site/', exist_ok=True)
         with open(self._tempdir + '/site/index.html', 'w') as f:
             f.write(template.render(site_name=self._config.name))
+        logging.debug("Generated website in %s", self._tempdir + '/site')
 
     def __youtube_dl_configuration(self):
         return {
