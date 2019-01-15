@@ -45,6 +45,7 @@ class BullSite:
         }
 
 
+YES_ANSWERS = ['Y', 'y', 'O', 'o', '']
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Create a bullshit website based on a video')
     parser.add_argument('--video_url',
@@ -69,3 +70,6 @@ if __name__ == '__main__':
     bullsite.download_video()
     bullsite.generate_nginx()
     bullsite.generate_index()
+
+    if input("Generate nginx config file? (Y/n)") in YES_ANSWERS:
+        bullsite.generate_nginx()
