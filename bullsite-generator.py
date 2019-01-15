@@ -10,6 +10,12 @@ from jinja2 import Environment, PackageLoader
 
 
 class BullSite:
+    """
+     Generate a website based on a video.
+
+     It downloads the video, create an index.html with the video in fullscreen/autoplay/loop in the
+     background and optionally create a nginx configuration file for the site
+    """
 
     def __init__(self, config):
         self._config = config
