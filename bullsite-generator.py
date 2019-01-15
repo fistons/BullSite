@@ -10,14 +10,6 @@ from jinja2 import Environment, PackageLoader
 
 
 class BullSite:
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }]
-    }
 
     def __init__(self, config):
         self._config = config
