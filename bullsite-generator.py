@@ -14,7 +14,7 @@ class BullSite:
      Generate a website based on a video.
 
      It downloads the video, create an index.html with the video in fullscreen/autoplay/loop in the
-     background and optionally create a nginx configuration file for the site
+     background and optionally create a nginx configuration file for the site.
     """
 
     def __init__(self, config):
@@ -24,12 +24,20 @@ class BullSite:
         print("%s will be used as the output folder" % self._tempdir)
 
     def download_video(self):
+        """
+        Donwload the video and store it in the output folder.
+        :return: Nothing.
+        """
         configuration = self.__youtube_dl_configuration()
         with youtube_dl.YoutubeDL(configuration) as ydl:
             ydl.download([self._config.video_url])
         print("Downloaded video from %s in %s" % (self._config.video_url, self._tempdir + '/site/'))
 
     def generate_nginx(self):
+        """
+        Generate the nginx configuration file in the output folder.
+        :return: Nothing.
+        """
         template = self._env.get_template('nginx.conf')
         os.makedirs(self._tempdir + '/nginx/', exist_ok=True)
         with open(self._tempdir + '/nginx/nginx.conf', 'w') as f:
@@ -38,6 +46,10 @@ class BullSite:
         print("Generated nginx configuration in %s" % self._tempdir + '/nginx/nginx.conf')
 
     def generate_index(self):
+        """
+        Generate the index.html of the website.
+        :return: Nothing.
+        """
         template = self._env.get_template('index.html')
         os.makedirs(self._tempdir + '/site/', exist_ok=True)
         with open(self._tempdir + '/site/index.html', 'w') as f:
@@ -45,9 +57,18 @@ class BullSite:
         print("Generated website in %s" % self._tempdir + '/site')
 
     def copy_site(self):
+        """
+        Copy the website in its destination folder.
+        :return: Nothing.
+        """
         shutil.copytree(self._tempdir + '/site/', self._config.site_location)
 
     def __youtube_dl_configuration(self):
+        """
+        Generate the youtube-dl configuration.
+        :return: the youtube-dl configuration.
+        :rtype: dict
+        """
         return {
             'outtmpl': self._tempdir + '/site/video.mp4',
             'format': 'mp4'
