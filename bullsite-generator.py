@@ -3,6 +3,7 @@
 import argparse
 import logging
 import os
+import shutil
 import tempfile
 
 import youtube_dl
@@ -37,6 +38,9 @@ class BullSite:
         with open(self._tempdir + '/site/index.html', 'w') as f:
             f.write(template.render(site_name=self._config.name))
         logging.debug("Generated website in %s", self._tempdir + '/site')
+
+    def copy_site(self):
+        shutil.copytree(self._tempdir + '/site/', self._config.site_location)
 
     def __youtube_dl_configuration(self):
         return {
